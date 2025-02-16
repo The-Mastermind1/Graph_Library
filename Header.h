@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include<cmath>
-
+#include<SFML/Graphics.hpp>
 struct Term {
     float coefficient;
    float exponent;
@@ -43,4 +43,68 @@ std::vector<Term> parse_polynomial( std::string input) {
     return term;
   
 
+}
+
+void draw_the_graph(std::vector<Term> terms) {
+    /* for (size_t i = 0; i < terms.size(); i++) {
+        std::cout << terms[i].coefficient << '\n';
+        std::cout << terms[i].exponent << '\n';
+     }*/
+
+    float xmin = -10.0f, xmax = 10.0f;
+    float step = 0.1f;
+    sf::RenderWindow window(sf::VideoMode(800, 600), "polynomial graph");
+    sf::VertexArray graph(sf::LinesStrip);
+    for (float x = xmin; x <= xmax; x += step) {
+        float y = 0;
+        for (size_t i = 0; i < terms.size(); i++) {
+             y += evaluate_polyonomial(terms[i].coefficient, terms[i].exponent, x);
+           
+        }
+        
+       
+        float screenX = (x - xmin) / (xmax - xmin) * 800; // Scale to window width
+        float screenY = 300 - y * 10; // Scale y and center on screen (adjust scaling as needed)
+
+        //std::cout << screenX << " " << screenY << '\n';
+        graph.append(sf::Vertex(sf::Vector2f(screenX, screenY), sf::Color::Red));
+    }
+    float offsetx = 400;
+    float offsety = 300;
+    sf::VertexArray axes(sf::Lines, 4);
+    axes[0].position = sf::Vector2f(0, offsety); // Άξονας X
+    axes[1].position = sf::Vector2f(800, offsety);//και τα δυο
+    axes[2].position = sf::Vector2f(offsetx, 0); // Άξονας Y
+    axes[3].position = sf::Vector2f(offsetx, 600);//και τα δυο 
+
+    for (int i = 0; i < 4; ++i) {
+        axes[i].color = sf::Color::Blue;
+    }
+
+    sf::VertexArray grid(sf::Lines);
+    for (int i = 0; i < 800; i += 50) {
+        grid.append(sf::Vertex(sf::Vector2f((float)i, 0), sf::Color(200, 200, 200)));
+        grid.append(sf::Vertex(sf::Vector2f((float)i, 600), sf::Color(200, 200, 200)));
+    }
+    for (int i = 0; i < 600; i += 50) {
+        grid.append(sf::Vertex(sf::Vector2f(0, (float)i), sf::Color(200, 200, 200)));
+        grid.append(sf::Vertex(sf::Vector2f(800, (float)i), sf::Color(200, 200, 200)));
+    }
+
+    // Main loop to render the graph
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear(sf::Color::Black); // Clear screen
+        window.draw(graph); // Draw the graph
+
+        window.draw(axes);
+        window.display(); // Display the window
+    }
+
+    return ;
 }
