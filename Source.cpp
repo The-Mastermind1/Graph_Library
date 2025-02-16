@@ -2,8 +2,8 @@
 
 
 int main() {
-    std::string input = "1x^2+3x^1"; // Polynomial input string
+   std::string input = "5x^5+e^5x"; // Polynomial input string
 
-   draw_the_graph(parse_polynomial(input));
+parse_polynomial(input);
   
 }
