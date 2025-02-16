@@ -3,7 +3,7 @@
 ~This library is also using regex in order to recognize patterns 
 
 
-~Heres a few examples:
+
 
 
 
