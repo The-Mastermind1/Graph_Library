@@ -2,8 +2,12 @@
 
 
 int main() {
-   std::string input = "5x^5+e^5x"; // Polynomial input string
-
-parse_polynomial(input);
+	using namespace _panagiotis_stelios;
+    std::string input = "15x^5+1log(15x)+4cos(55x)"; // Polynomial input string
   
+   parse_polynomial(input);
+
+	
+  
+   
 }
