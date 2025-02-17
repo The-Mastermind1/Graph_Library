@@ -1,5 +1,6 @@
 #pragma once
 #include<exception>
+#include<string>
 #define _P_S_BEGIN namespace _panagiotis_stelios{
 
 #define _P_S_END }
@@ -31,6 +32,11 @@ struct Term5 {
     float cos;
 };
 
+struct Term6 {
+    float a;
+};
+
+
 class _INVALID_INPUT : public std::exception {
 private:
     std::string errorMessage; // To store the error message
@@ -45,4 +51,14 @@ public:
         return errorMessage.c_str();
     }
 };
+
+template<typename ...ts>
+struct overload :ts...{
+    using ts::operator()...;
+};
+template<typename ...ts>
+overload(ts...) -> overload<ts...>;
+
+
+
 
