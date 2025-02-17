@@ -2,7 +2,6 @@
 #include <iostream>
 #include"Macros.h"
 #include <regex>
-#include <string>
 #include <vector>
 #include<cmath>
 #include<SFML/Graphics.hpp>
@@ -139,17 +138,32 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
+                sf::Texture screentexture;
+                screentexture.create(window.getSize().x, window.getSize().y);
+                screentexture.update(window);
+
+                sf::Image screenshot = screentexture.copyToImage();
+                if (!screenshot.saveToFile("output.png")) { // You can also use "output.png"
+                    throw _FAILED_LOADED_IMAGE{ "Failed to load the image\n" };
+                }
+              
+
                 window.close();
+            }
         }
 
         window.clear(sf::Color::Black); // Clear screen
+        window.draw(grid);
         window.draw(axes);
+       
         window.draw(graph); // Draw the graph
-
+       
         
         window.display(); // Display the window
     }
+   
+
 
     return;
 }
@@ -345,5 +359,6 @@ inline void  parse_graph(const std::string input) {
 }
 
 _P_S_END
+
 
 
