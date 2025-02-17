@@ -15,65 +15,87 @@ _P_S_BEGIN
 
 
 
-_NODISCARD inline  float evaluate_polyonomial(float cofficient, float  expotent, float x) {
+_NODISCARD inline  float evaluate_polyonomial(float cofficient, float  expotent, float x)noexcept {
     std::cout << cofficient << " " << expotent << '\n';
     return static_cast<float>(cofficient * std::pow(x, expotent));
 }
-_NODISCARD inline float evaluate_exponential(float n,float a, float x) {
+_NODISCARD inline float evaluate_exponential(float n,float a, float x)noexcept {
     std::cout << n << " " << a << '\n';
     
     return n*std::exp(a * x);
 }
 
-_NODISCARD inline float evaluate_log(float n, float a, float x) {
+_NODISCARD inline float evaluate_log(float n, float a, float x)noexcept {
     std::cout << n << " " << a << '\n';
     return n*std::log(a * x);
 }
 
-_NODISCARD inline float evaluate_sin(float n, float a, float x) {
+_NODISCARD inline float evaluate_sin(float n, float a, float x)noexcept {
     std::cout << n << " " << a << '\n';
     return n*std::sin(a * x);
 }
 
-_NODISCARD inline float evaluate_cos(float n, float a, float x) {
+_NODISCARD inline float evaluate_cos(float n, float a, float x)noexcept {
     std::cout << n << " " << a << '\n';
    
     return n*std::cos(a * x);
 }
-inline void draw_the_graph(std::vector<std::variant<Term,Term2,Term3,Term4,Term5>>& terms) {
+_NODISCARD inline float evaluate_a( float a, float x)noexcept {
+    std::cout << a << '\n';
+
+    return std::pow(a,x);
+}
+
+
+
+using Terms = std::variant < Term, Term2, Term3, Term4, Term5,Term6>;
+inline void draw_the_graph(std::vector<Terms>& terms) {
+   
     /* for (size_t i = 0; i < terms.size(); i++) {
         std::cout << terms[i].coefficient << '\n';
         std::cout << terms[i].exponent << '\n';
      }*/
-
-    float xmin = -10.0f, xmax = 10.0f;
+    float xmin = -10.0f;
+    float xmax = 10.0f;
     float step = 0.1f;
     sf::RenderWindow window(sf::VideoMode(800, 600), "polynomial graph");
     sf::VertexArray graph(sf::LinesStrip);
+    
     for (float x = xmin; x <= xmax; x += step) {
         float y = 0;
+        
         for (size_t i = 0; i < terms.size(); i++) {
           
-           if (terms[i].index() == 0) {
+           /*if (terms[i].index() == 0 &&!terms[i].valueless_by_exception()) {
                     y += evaluate_polyonomial(std::get<0>(terms[i]).coefficient, std::get<0>(terms[i]).exponent, x);
 
            }
-           else if(terms[i].index()==1) {
+           else if(terms[i].index()==1 && !terms[i].valueless_by_exception()) {
               
               
                     y += evaluate_exponential(std::get<1>(terms[i]).a,std::get<1>(terms[i]).expontential, x);
            }
-           else if (terms[i].index() == 2) {
+           else if (terms[i].index() == 2 && !terms[i].valueless_by_exception()) {
                y += evaluate_log(std::get<2>(terms[i]).a,std::get<2>(terms[i]).log, x);
            }
-           else if (terms[i].index() == 3) {
+           else if (terms[i].index() == 3 && !terms[i].valueless_by_exception()) {
                y += evaluate_sin(std::get<3>(terms[i]).a,std::get<3>(terms[i]).sin, x);
 
            }
-           else if (terms[i].index() == 4) {
+           else if (terms[i].index() == 4 && !terms[i].valueless_by_exception()) {
                y += evaluate_cos(std::get<4>(terms[i]).a,std::get<4>(terms[i]).cos, x);
 
-           }
+           }*/
+            if (!terms[i].valueless_by_exception()) {
+                std::visit(overload{
+                 [&y,x](Term& val) {y += evaluate_polyonomial(val.coefficient,val.exponent,x); },
+                 [&y,x](Term2& val) {y += evaluate_exponential(val.a,val.expontential,x); },
+                 [&y,x](Term3& val) {y += evaluate_log(val.a,val.log,x); },
+                 [&y,x](Term4& val) {y += evaluate_sin(val.a,val.sin,x); },
+                 [&y,x](Term5& val) {y += evaluate_cos(val.a,val.cos,x); },
+                 [&y,x](Term6& val) {y += evaluate_a(val.a,x); }, },
+                 terms[i]);
+            }
            
            
            
@@ -135,13 +157,16 @@ inline void draw_the_graph(std::vector<std::variant<Term,Term2,Term3,Term4,Term5
 
 
 
-inline void  parse_polynomial(const std::string input) {
-    std::vector<std::variant<Term, Term2,Term3,Term4,Term5>> term;
-    std::regex pattern1(R"([+-]?[1-9]+x\^[1-9]+)");
+inline void  parse_graph(const std::string input) {
+    
+    std::vector<Terms> term;
+    std::regex pattern1(R"([+-]?[1-9]*x\^[1-9]+)");
     std::regex pattern2(R"([+-]?[1-9]*e\^[1-9]+x)");
     std::regex pattern3(R"([+-]?[1-9]*log\([1-9]+x\))");
     std::regex pattern4(R"([+-]?[1-9]*sin\([1-9]+x\))");
     std::regex pattern5(R"([+-]?[1-9]*cos\([1-9]+x\))");
+    std::regex pattern6(R"([2-9]\^x)");
+
    
    
     std::sregex_iterator begin1(input.cbegin(), input.cend(), pattern1);
@@ -149,11 +174,12 @@ inline void  parse_polynomial(const std::string input) {
     std::sregex_iterator begin3(input.cbegin(), input.cend(), pattern3);
     std::sregex_iterator begin4(input.cbegin(), input.cend(), pattern4);
     std::sregex_iterator begin5(input.cbegin(), input.cend(), pattern5);
-  
+    std::sregex_iterator begin6(input.cbegin(), input.cend(), pattern6);
     std::sregex_iterator end;
    
    
     for (std::sregex_iterator it = begin1; it != end; ++it) {
+    
         Term a;
         std::smatch match = *it;
         std::string kati{ match.str() };//ax^n
@@ -216,7 +242,7 @@ inline void  parse_polynomial(const std::string input) {
 
     }
     for (std::sregex_iterator it = begin3; it != end; ++it) {
-       
+        
         std::smatch match = *it;
         std::string kati{ match.str() };//nlog(ax)
         Term3 a;
@@ -294,6 +320,21 @@ inline void  parse_polynomial(const std::string input) {
 
        
     }
+    
+    for (std::sregex_iterator it = begin6; it != end; it++) {
+        std::smatch match = *it;
+        std::string kati{ match.str() };//ncos(ax)
+        Term6 a;
+        a.a = std::stof(kati);
+       
+        term.push_back(std::move(a));
+
+
+    }
+
+
+   
+    
    
     if (term.size() == 0) {
         throw _INVALID_INPUT("Invalid input");
