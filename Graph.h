@@ -171,14 +171,14 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
 
 
 
-inline void  parse_graph(const std::string input) {
+inline void  parse_graph(const std::string& input) {
     
     std::vector<Terms> term;
-    std::regex pattern1(R"([+-]?[1-9]*x\^[1-9]+)");
-    std::regex pattern2(R"([+-]?[1-9]*e\^[1-9]+x)");
-    std::regex pattern3(R"([+-]?[1-9]*log\([1-9]+x\))");
-    std::regex pattern4(R"([+-]?[1-9]*sin\([1-9]+x\))");
-    std::regex pattern5(R"([+-]?[1-9]*cos\([1-9]+x\))");
+    std::regex pattern1(R"([+-]?([1-9][0-9]*)*x\^[1-9]+)");
+    std::regex pattern2(R"([+-]?([1-9][0-9]*)*e\^[1-9]+x)");
+    std::regex pattern3(R"([+-]?([1-9][0-9]*)*log\([1-9]+x\))");
+    std::regex pattern4(R"([+-]?([1-9][0-9]*)*sin\([1-9]+x\))");
+    std::regex pattern5(R"([+-]?([1-9][0-9]*)*cos\([1-9]+x\))");
     std::regex pattern6(R"([2-9]\^x)");
 
    
@@ -200,9 +200,9 @@ inline void  parse_graph(const std::string input) {
         try {
             a.coefficient = std::stof(kati);
         }
-        catch (const std::exception& e) {
-            std::cout << e.what() << '\n';
-            return;
+        catch (...) {
+           
+            throw _INVALID_INPUT{ "Invalid input" };
         }
         
        
@@ -233,9 +233,8 @@ inline void  parse_graph(const std::string input) {
             try {
                 a.a = stof(kati);
             }
-            catch (const std::invalid_argument&e) {
-                std::cout << e.what() << '\n';
-                return;
+            catch (...) {
+                throw _INVALID_INPUT{ "Invalid input" };
             }
         }
         else {
@@ -264,9 +263,8 @@ inline void  parse_graph(const std::string input) {
             try {
                 a.a = stof(kati);
             }
-            catch (const std::invalid_argument& e) {
-                std::cout << e.what() << '\n';
-                return;
+            catch (...) {
+                throw _INVALID_INPUT{ "Invalid input" };
             }
         }
         else {
@@ -291,9 +289,9 @@ inline void  parse_graph(const std::string input) {
             try {
                 a.a = stof(kati);
             }
-            catch (const std::invalid_argument& e) {
-                std::cout << e.what() << '\n';
-                return;
+            catch (...) {
+              
+                throw _INVALID_INPUT{ "Invalid input" };
             }
         }
         else {
@@ -316,9 +314,9 @@ inline void  parse_graph(const std::string input) {
             try {
                 a.a = stof(kati);
             }
-            catch (const std::invalid_argument& e) {
-                std::cout << e.what() << '\n';
-                return;
+            catch (...) {
+                throw _INVALID_INPUT{ "Invalid input" };
+               
             }
         }
         else {
@@ -351,7 +349,7 @@ inline void  parse_graph(const std::string input) {
     
    
     if (term.size() == 0) {
-        throw _INVALID_INPUT("Invalid input");
+        throw _INVALID_INPUT{ "Invalid input" };
     }
    draw_the_graph(term);
    return;
