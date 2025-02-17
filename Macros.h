@@ -52,12 +52,29 @@ public:
     }
 };
 
+class _FAILED_LOADED_IMAGE : public std::exception {
+private:
+    std::string errorMessage; // To store the error message
+public:
+    // Constructor to initialize the error message
+    explicit _FAILED_LOADED_IMAGE(const std::string& message)
+        : errorMessage(message) {
+    }
+
+    // Override the what() method
+    const char* what() const noexcept override {
+        return errorMessage.c_str();
+    }
+};
+
 template<typename ...ts>
 struct overload :ts...{
     using ts::operator()...;
 };
 template<typename ...ts>
 overload(ts...) -> overload<ts...>;
+
+
 
 
 
