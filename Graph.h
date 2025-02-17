@@ -1,5 +1,3 @@
-
-
 #pragma once
 #include <iostream>
 #include"Macros.h"
@@ -9,7 +7,7 @@
 #include<SFML/Graphics.hpp>
 #include<variant>
 #include<utility>
-#include<string_view>
+#include<iterator>
 
 _P_S_BEGIN
 
@@ -60,8 +58,8 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
     float xmax = 10.0f;
     try {
         float step = 0.1f;
-        sf::RenderWindow window(sf::VideoMode(800, 600), "polynomial graph");
-        sf::VertexArray graph(sf::LinesStrip);
+      
+        sf::VertexArray graph(sf::LineStrip);//connects the dots on the graph
 
         for (float x = xmin; x <= xmax; x += step) {
             float y = 0;
@@ -113,7 +111,7 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
             float screenY = 300 - y * 10; // Scale y and center on screen (adjust scaling as needed)
 
             //std::cout << screenX << " " << screenY << '\n';
-            graph.append(sf::Vertex(sf::Vector2f(screenX, screenY), sf::Color::Red));
+            graph.append(sf::Vertex(sf::Vector2f(screenX, screenY), sf::Color::Red));//take vertexes
         }
         float offsetx = 400;
         float offsety = 300;
@@ -128,6 +126,7 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
         }
 
         sf::VertexArray grid(sf::Lines);
+        
         for (int i = 0; i < 800; i += 50) {
             grid.append(sf::Vertex(sf::Vector2f((float)i, 0), sf::Color(200, 200, 200)));
             grid.append(sf::Vertex(sf::Vector2f((float)i, 600), sf::Color(200, 200, 200)));
@@ -138,34 +137,66 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
         }
 
         // Main loop to render the graph
-        while (window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    sf::Texture screentexture;
-                    screentexture.create(window.getSize().x, window.getSize().y);
-                    screentexture.update(window);
+        //while (window.isOpen()) {
+        //    sf::Event event;
+        //    while (window.pollEvent(event)) {
+        //        if (event.type == sf::Event::Closed) {
+        //            sf::Texture screentexture;
+        //            screentexture.create(window.getSize().x, window.getSize().y);
+        //            screentexture.update(window);
 
-                    sf::Image screenshot = screentexture.copyToImage();
-                    if (!screenshot.saveToFile("output.png")) { // You can also use "output.png"
-                        throw _FAILED_LOADED_IMAGE{ "Failed to load the image\n" };
-                    }
+        //            sf::Image screenshot = screentexture.copyToImage();
+        //            if (!screenshot.saveToFile("output.png")) { // You can also use "output.png"
+        //                throw _FAILED_LOADED_IMAGE{ "Failed to load the image\n" };
+        //            }
 
 
-                    window.close();
+        //            window.close();
+        //        }
+        //    }
+
+        //    window.clear(sf::Color::Black); // Clear screen
+        //    window.draw(grid);
+        //    window.draw(axes);
+
+        //    window.draw(graph); // Draw the graph
+
+
+        //    window.display(); // Display the window
+        //}
+        //window.~RenderWindow();
+       
+           
+          
+            sf::RenderTexture rendertexture;
+            if (rendertexture.create(800, 600)) {
+
+                rendertexture.clear(sf::Color::Black);
+                rendertexture.draw(grid);
+                rendertexture.draw(axes);
+                rendertexture.draw(graph);
+                rendertexture.display();
+                //sf::sleep(sf::milliseconds(100)); // Small delay to ensure window updates
+
+                sf::Texture texture = rendertexture.getTexture();
+
+
+                sf::Image screenshot = texture.copyToImage();
+                if (!screenshot.saveToFile("output.bmp")) {
+                    throw _FAILED_LOADED_IMAGE{ "Failed to load the image\n" };
                 }
+                screenshot.~Image();
+                texture.~Texture();
+               
+            }
+            else {
+                throw _FAILED_ACTION{ "Something went wrong" };
             }
 
-            window.clear(sf::Color::Black); // Clear screen
-            window.draw(grid);
-            window.draw(axes);
-
-            window.draw(graph); // Draw the graph
-
-
-            window.display(); // Display the window
-        }
-        window.~RenderWindow();
+            //sf::sleep(sf::milliseconds(1000));
+           
+        
+       
     }
     catch (...) {
         throw _FAILED_ACTION{ "Something went wrong" };
@@ -199,13 +230,28 @@ inline void  parse_graph(const std::string& input) {
     std::sregex_iterator begin5(input.cbegin(), input.cend(), pattern5);
     std::sregex_iterator begin6(input.cbegin(), input.cend(), pattern6);
     std::sregex_iterator end;
+    std::smatch match;
+    std::string kati;
+
    
+    std::string::iterator it2;
+
+    std::size_t iterations = 0;//see the iterations
+    iterations+=std::distance(begin1, end);
+    iterations += std::distance(begin2, end);
+    iterations += std::distance(begin3, end);
+    iterations += std::distance(begin4, end);
+    iterations += std::distance(begin5, end);
+    iterations += std::distance(begin6, end);
    
+    term.reserve(iterations);
+
+
     for (std::sregex_iterator it = begin1; it != end; ++it) {
-    
+       
         Term a;
-        std::smatch match = *it;
-        std::string kati{ match.str() };//ax^n
+        match = *it;
+        kati= match.str() ;//ax^n
         try {
             a.coefficient = std::stof(kati);
         }
@@ -216,8 +262,8 @@ inline void  parse_graph(const std::string& input) {
         
        
        
-        std::string::iterator it2 = std::find(kati.begin(), kati.end(),'^');
-        std::string kati2{ it2 + 1,kati.end()};
+         it2 = std::find(kati.begin(), kati.end(),'^');
+         std::string kati2{ it2 + 1,kati.end() };
         
        
        
@@ -227,16 +273,17 @@ inline void  parse_graph(const std::string& input) {
         
        
 
-        term.push_back(std::move(a));
+        term.emplace_back(std::move(a));
        
 
     }
+  
    
 
     for (std::sregex_iterator it = begin2; it != end; ++it) {
         
-        std::smatch match = *it;  
-        std::string kati{ match.str() };//e^ax
+       match = *it;  
+       kati= match.str();//e^ax
         Term2 a;
         if (kati[0] != 'e') {
             try {
@@ -249,7 +296,7 @@ inline void  parse_graph(const std::string& input) {
         else {
             a.a = 1;
         }
-        std::string::iterator it2 = std::find(kati.begin(), kati.end(), '^');
+        it2 = std::find(kati.begin(), kati.end(), '^');
         std::string kati2{ it2 + 1,kati.end() };
       
       
@@ -257,7 +304,7 @@ inline void  parse_graph(const std::string& input) {
         a.expontential = stof(kati2);
         
         
-        term.push_back(std::move(a));
+        term.emplace_back(std::move(a));
       
         
 
@@ -265,9 +312,9 @@ inline void  parse_graph(const std::string& input) {
     }
     for (std::sregex_iterator it = begin3; it != end; ++it) {
         
-        std::smatch match = *it;
+        match = *it;
        
-        std::string kati{ match.str() };//nlog(ax)
+        kati= match.str() ;//nlog(ax)
         Term3 a;
         if (kati[0] != 'l') {
             try {
@@ -280,20 +327,20 @@ inline void  parse_graph(const std::string& input) {
         else {
             a.a = 1;
         }
-        std::string::iterator it2 = std::find(kati.begin(), kati.end(), '(');
+        it2 = std::find(kati.begin(), kati.end(), '(');
         std::string kati2{ it2 + 1,kati.end() };
       
         a.log = stof(kati2);
         
       
-        term.push_back(std::move(a));
+        term.emplace_back(std::move(a));
 
        
     }
     for (std::sregex_iterator it = begin4; it != end; it++) {
         
-        std::smatch match = *it;
-        std::string kati{ match.str() };//nsin(ax)
+        match = *it;
+        kati= match.str() ;//nsin(ax)
         Term4 a;
         if (kati[0] != 's') {
             try {
@@ -307,18 +354,18 @@ inline void  parse_graph(const std::string& input) {
         else {
             a.a = 1;
         }
-        std::string::iterator it2 = std::find(kati.begin(), kati.end(), '(');
+        it2 = std::find(kati.begin(), kati.end(), '(');
         std::string kati2{ it2 + 1,kati.end() };
        
         a.sin = stof(kati2);
         
        
-        term.push_back(std::move(a));
+        term.emplace_back(std::move(a));
 
     }
     for (std::sregex_iterator it = begin5; it != end; it++) {
-        std::smatch match = *it;
-        std::string kati{ match.str() };//ncos(ax)
+        match = *it;
+        kati= match.str();//ncos(ax)
         Term5 a;
         if (kati[0] != 'c') {
             try {
@@ -332,24 +379,24 @@ inline void  parse_graph(const std::string& input) {
         else {
             a.a = 1;
         }
-        std::string::iterator it2 = std::find(kati.begin(), kati.end(), '(');
+        it2 = std::find(kati.begin(), kati.end(), '(');
         std::string kati2{ it2 + 1,kati.end() };
        
         a.cos = stof(kati2);
         
         
-        term.push_back(std::move(a));
+        term.emplace_back(std::move(a));
 
        
     }
     
     for (std::sregex_iterator it = begin6; it != end; it++) {
-        std::smatch match = *it;
-        std::string kati{ match.str() };//ncos(ax)
+         match = *it;
+         kati= match.str() ;//ncos(ax)
         Term6 a;
         a.a = std::stof(kati);
        
-        term.push_back(std::move(a));
+        term.emplace_back(std::move(a));
 
 
     }
@@ -361,8 +408,8 @@ inline void  parse_graph(const std::string& input) {
     if (term.size() == 0) {
         throw _INVALID_INPUT{ "Invalid Input" };
     }
-   draw_the_graph(term);
-   return;
+    draw_the_graph(term);
+    return;
 
 }
 
