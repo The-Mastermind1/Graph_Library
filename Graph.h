@@ -104,6 +104,7 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
 
 
             }
+            std::cout <<"y:" << y << " x: " << x << '\n';
             //std::cout << y << '\n';
 
 
@@ -249,31 +250,22 @@ inline void  parse_graph(const std::string& input) {
 
     for (std::sregex_iterator it = begin1; it != end; ++it) {
        
-        Term a;
-        match = *it;
-        kati= match.str() ;//ax^n
-        try {
-            a.coefficient = std::stof(kati);
-        }
-        catch (...) {
-           
-            throw _INVALID_INPUT{ "Invalid Input" };
-        }
-        
        
-       
+         match = *it;
+         kati= match.str() ;//ax^n
+
          it2 = std::find(kati.begin(), kati.end(),'^');
          std::string kati2{ it2 + 1,kati.end() };
-        
-       
-       
-       a.exponent = std::stof(kati2);
-        
-       
-        
-       
 
-        term.emplace_back(std::move(a));
+       
+       try {
+           term.emplace_back<Term>({ std::stof(kati), std::stof(kati2) });
+       }
+       catch (...) {
+
+           throw _INVALID_INPUT{ "Invalid Input" };
+       }
+
        
 
     }
@@ -284,27 +276,27 @@ inline void  parse_graph(const std::string& input) {
         
        match = *it;  
        kati= match.str();//e^ax
-        Term2 a;
-        if (kati[0] != 'e') {
+       
+        
+       it2 = std::find(kati.begin(), kati.end(), '^');
+       std::string kati2{ it2 + 1,kati.end() };
+      
+      
+          
+       
+       if (kati[0] != 'e') {
             try {
-                a.a = stof(kati);
+                term.emplace_back<Term2>({ std::stof(kati),std::stof(kati2) });
             }
             catch (...) {
                 throw _INVALID_INPUT{ "Invalid Input" };
             }
-        }
-        else {
-            a.a = 1;
-        }
-        it2 = std::find(kati.begin(), kati.end(), '^');
-        std::string kati2{ it2 + 1,kati.end() };
-      
-      
-          
-        a.expontential = stof(kati2);
+       }
+       else {
+            term.emplace_back<Term2>({ 1,std::stof(kati2) });
+       }
         
-        
-        term.emplace_back(std::move(a));
+       
       
         
 
@@ -315,25 +307,24 @@ inline void  parse_graph(const std::string& input) {
         match = *it;
        
         kati= match.str() ;//nlog(ax)
-        Term3 a;
+      
+       
+        it2 = std::find(kati.begin(), kati.end(), '(');
+        std::string kati2{ it2 + 1,kati.end() };
+      
+       
+        
         if (kati[0] != 'l') {
             try {
-                a.a = stof(kati);
+                term.emplace_back<Term3>({ std::stof(kati),std::stof(kati2) });
             }
             catch (...) {
                 throw _INVALID_INPUT{ "Invalid Input" };
             }
         }
         else {
-            a.a = 1;
+            term.emplace_back<Term3>({ 1,std::stof(kati2) });
         }
-        it2 = std::find(kati.begin(), kati.end(), '(');
-        std::string kati2{ it2 + 1,kati.end() };
-      
-        a.log = stof(kati2);
-        
-      
-        term.emplace_back(std::move(a));
 
        
     }
@@ -341,51 +332,48 @@ inline void  parse_graph(const std::string& input) {
         
         match = *it;
         kati= match.str() ;//nsin(ax)
-        Term4 a;
-        if (kati[0] != 's') {
-            try {
-                a.a = stof(kati);
-            }
-            catch (...) {
-              
-                throw _INVALID_INPUT{ "Invalid Input" };
-            }
-        }
-        else {
-            a.a = 1;
-        }
+      
         it2 = std::find(kati.begin(), kati.end(), '(');
         std::string kati2{ it2 + 1,kati.end() };
        
-        a.sin = stof(kati2);
+      
         
-       
-        term.emplace_back(std::move(a));
+        if (kati[0] != 's') {
+            try {
+                term.emplace_back<Term4>({ std::stof(kati),std::stof(kati2) });
+            }
+            catch (...) {
+
+                throw _INVALID_INPUT{ "Invalid Input" };
+            }
+
+        }
+        else {
+            term.emplace_back<Term4>({1,std::stof(kati2)});
+        }
 
     }
     for (std::sregex_iterator it = begin5; it != end; it++) {
         match = *it;
         kati= match.str();//ncos(ax)
-        Term5 a;
-        if (kati[0] != 'c') {
-            try {
-                a.a = stof(kati);
-            }
-            catch (...) {
-                throw _INVALID_INPUT{ "Invalid Input" };
-               
-            }
-        }
-        else {
-            a.a = 1;
-        }
+        
         it2 = std::find(kati.begin(), kati.end(), '(');
         std::string kati2{ it2 + 1,kati.end() };
        
-        a.cos = stof(kati2);
+       
         
-        
-        term.emplace_back(std::move(a));
+       if(kati[0]!='c') {
+           try {
+               term.emplace_back<Term5>({std::stof(kati),std::stof(kati2)});
+           }
+           catch (...) {
+               throw _INVALID_INPUT{ "Invalid Input" };
+
+           }
+       }
+       else {
+           term.emplace_back<Term5>({1,std::stof(kati2)});
+       }
 
        
     }
@@ -393,10 +381,9 @@ inline void  parse_graph(const std::string& input) {
     for (std::sregex_iterator it = begin6; it != end; it++) {
          match = *it;
          kati= match.str() ;//ncos(ax)
-        Term6 a;
-        a.a = std::stof(kati);
+         
        
-        term.emplace_back(std::move(a));
+         term.emplace_back<Term6>({std::stof(kati)});
 
 
     }
@@ -414,4 +401,6 @@ inline void  parse_graph(const std::string& input) {
 }
 
 _P_S_END
+
+
 
