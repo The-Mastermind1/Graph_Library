@@ -1,3 +1,5 @@
+
+
 #pragma once
 #include <iostream>
 #include"Macros.h"
@@ -56,113 +58,120 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
      }*/
     float xmin = -10.0f;
     float xmax = 10.0f;
-    float step = 0.1f;
-    sf::RenderWindow window(sf::VideoMode(800, 600), "polynomial graph");
-    sf::VertexArray graph(sf::LinesStrip);
-    
-    for (float x = xmin; x <= xmax; x += step) {
-        float y = 0;
-        
-        for (size_t i = 0; i < terms.size(); i++) {
-          
-           /*if (terms[i].index() == 0 &&!terms[i].valueless_by_exception()) {
-                    y += evaluate_polyonomial(std::get<0>(terms[i]).coefficient, std::get<0>(terms[i]).exponent, x);
+    try {
+        float step = 0.1f;
+        sf::RenderWindow window(sf::VideoMode(800, 600), "polynomial graph");
+        sf::VertexArray graph(sf::LinesStrip);
 
-           }
-           else if(terms[i].index()==1 && !terms[i].valueless_by_exception()) {
-              
-              
-                    y += evaluate_exponential(std::get<1>(terms[i]).a,std::get<1>(terms[i]).expontential, x);
-           }
-           else if (terms[i].index() == 2 && !terms[i].valueless_by_exception()) {
-               y += evaluate_log(std::get<2>(terms[i]).a,std::get<2>(terms[i]).log, x);
-           }
-           else if (terms[i].index() == 3 && !terms[i].valueless_by_exception()) {
-               y += evaluate_sin(std::get<3>(terms[i]).a,std::get<3>(terms[i]).sin, x);
+        for (float x = xmin; x <= xmax; x += step) {
+            float y = 0;
 
-           }
-           else if (terms[i].index() == 4 && !terms[i].valueless_by_exception()) {
-               y += evaluate_cos(std::get<4>(terms[i]).a,std::get<4>(terms[i]).cos, x);
+            for (size_t i = 0; i < terms.size(); i++) {
 
-           }*/
-            if (!terms[i].valueless_by_exception()) {
-                std::visit(overload{
-                 [&y,x](Term& val) {y += evaluate_polyonomial(val.coefficient,val.exponent,x); },
-                 [&y,x](Term2& val) {y += evaluate_exponential(val.a,val.expontential,x); },
-                 [&y,x](Term3& val) {y += evaluate_log(val.a,val.log,x); },
-                 [&y,x](Term4& val) {y += evaluate_sin(val.a,val.sin,x); },
-                 [&y,x](Term5& val) {y += evaluate_cos(val.a,val.cos,x); },
-                 [&y,x](Term6& val) {y += evaluate_a(val.a,x); }, },
-                 terms[i]);
-            }
-           
-           
-           
-              
-            
-           
+                /*if (terms[i].index() == 0 &&!terms[i].valueless_by_exception()) {
+                         y += evaluate_polyonomial(std::get<0>(terms[i]).coefficient, std::get<0>(terms[i]).exponent, x);
 
-        }
-        //std::cout << y << '\n';
-       
-
-        float screenX = (x - xmin) / (xmax - xmin) * 800; // Scale to window width
-        float screenY = 300 - y * 10; // Scale y and center on screen (adjust scaling as needed)
-
-        //std::cout << screenX << " " << screenY << '\n';
-        graph.append(sf::Vertex(sf::Vector2f(screenX, screenY), sf::Color::Red));
-    }
-    float offsetx = 400;
-    float offsety = 300;
-    sf::VertexArray axes(sf::Lines, 4);
-    axes[0].position = sf::Vector2f(0, offsety); // Άξονας X
-    axes[1].position = sf::Vector2f(800, offsety);//και τα δυο
-    axes[2].position = sf::Vector2f(offsetx, 0); // Άξονας Y
-    axes[3].position = sf::Vector2f(offsetx, 600);//και τα δυο 
-
-    for (int i = 0; i < 4; ++i) {
-        axes[i].color = sf::Color::Blue;
-    }
-
-    sf::VertexArray grid(sf::Lines);
-    for (int i = 0; i < 800; i += 50) {
-        grid.append(sf::Vertex(sf::Vector2f((float)i, 0), sf::Color(200, 200, 200)));
-        grid.append(sf::Vertex(sf::Vector2f((float)i, 600), sf::Color(200, 200, 200)));
-    }
-    for (int i = 0; i < 600; i += 50) {
-        grid.append(sf::Vertex(sf::Vector2f(0, (float)i), sf::Color(200, 200, 200)));
-        grid.append(sf::Vertex(sf::Vector2f(800, (float)i), sf::Color(200, 200, 200)));
-    }
-
-    // Main loop to render the graph
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                sf::Texture screentexture;
-                screentexture.create(window.getSize().x, window.getSize().y);
-                screentexture.update(window);
-
-                sf::Image screenshot = screentexture.copyToImage();
-                if (!screenshot.saveToFile("output.png")) { // You can also use "output.png"
-                    throw _FAILED_LOADED_IMAGE{ "Failed to load the image\n" };
                 }
-              
+                else if(terms[i].index()==1 && !terms[i].valueless_by_exception()) {
 
-                window.close();
+
+                         y += evaluate_exponential(std::get<1>(terms[i]).a,std::get<1>(terms[i]).expontential, x);
+                }
+                else if (terms[i].index() == 2 && !terms[i].valueless_by_exception()) {
+                    y += evaluate_log(std::get<2>(terms[i]).a,std::get<2>(terms[i]).log, x);
+                }
+                else if (terms[i].index() == 3 && !terms[i].valueless_by_exception()) {
+                    y += evaluate_sin(std::get<3>(terms[i]).a,std::get<3>(terms[i]).sin, x);
+
+                }
+                else if (terms[i].index() == 4 && !terms[i].valueless_by_exception()) {
+                    y += evaluate_cos(std::get<4>(terms[i]).a,std::get<4>(terms[i]).cos, x);
+
+                }*/
+                if (!terms[i].valueless_by_exception()) {
+                    std::visit(overload{
+                     [&y,x](Term& val) {y += evaluate_polyonomial(val.coefficient,val.exponent,x); },
+                     [&y,x](Term2& val) {y += evaluate_exponential(val.a,val.expontential,x); },
+                     [&y,x](Term3& val) {y += evaluate_log(val.a,val.log,x); },
+                     [&y,x](Term4& val) {y += evaluate_sin(val.a,val.sin,x); },
+                     [&y,x](Term5& val) {y += evaluate_cos(val.a,val.cos,x); },
+                     [&y,x](Term6& val) {y += evaluate_a(val.a,x); }, },
+                     terms[i]);
+                }
+
+
+
+
+
+
+
             }
+            //std::cout << y << '\n';
+
+
+            float screenX = (x - xmin) / (xmax - xmin) * 800; // Scale to window width
+            float screenY = 300 - y * 10; // Scale y and center on screen (adjust scaling as needed)
+
+            //std::cout << screenX << " " << screenY << '\n';
+            graph.append(sf::Vertex(sf::Vector2f(screenX, screenY), sf::Color::Red));
+        }
+        float offsetx = 400;
+        float offsety = 300;
+        sf::VertexArray axes(sf::Lines, 4);
+        axes[0].position = sf::Vector2f(0, offsety); // Άξονας X
+        axes[1].position = sf::Vector2f(800, offsety);//και τα δυο
+        axes[2].position = sf::Vector2f(offsetx, 0); // Άξονας Y
+        axes[3].position = sf::Vector2f(offsetx, 600);//και τα δυο 
+
+        for (int i = 0; i < 4; ++i) {
+            axes[i].color = sf::Color::Blue;
         }
 
-        window.clear(sf::Color::Black); // Clear screen
-        window.draw(grid);
-        window.draw(axes);
-       
-        window.draw(graph); // Draw the graph
-       
-        
-        window.display(); // Display the window
+        sf::VertexArray grid(sf::Lines);
+        for (int i = 0; i < 800; i += 50) {
+            grid.append(sf::Vertex(sf::Vector2f((float)i, 0), sf::Color(200, 200, 200)));
+            grid.append(sf::Vertex(sf::Vector2f((float)i, 600), sf::Color(200, 200, 200)));
+        }
+        for (int i = 0; i < 600; i += 50) {
+            grid.append(sf::Vertex(sf::Vector2f(0, (float)i), sf::Color(200, 200, 200)));
+            grid.append(sf::Vertex(sf::Vector2f(800, (float)i), sf::Color(200, 200, 200)));
+        }
+
+        // Main loop to render the graph
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    sf::Texture screentexture;
+                    screentexture.create(window.getSize().x, window.getSize().y);
+                    screentexture.update(window);
+
+                    sf::Image screenshot = screentexture.copyToImage();
+                    if (!screenshot.saveToFile("output.png")) { // You can also use "output.png"
+                        throw _FAILED_LOADED_IMAGE{ "Failed to load the image\n" };
+                    }
+
+
+                    window.close();
+                }
+            }
+
+            window.clear(sf::Color::Black); // Clear screen
+            window.draw(grid);
+            window.draw(axes);
+
+            window.draw(graph); // Draw the graph
+
+
+            window.display(); // Display the window
+        }
+        window.~RenderWindow();
     }
-   
+    catch (...) {
+        throw _FAILED_ACTION{ "Something went wrong" };
+
+    }
+  
 
 
     return;
@@ -174,12 +183,12 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
 inline void  parse_graph(const std::string& input) {
     
     std::vector<Terms> term;
-    std::regex pattern1(R"([+-]?([1-9][0-9]*)*x\^[1-9]+)");
-    std::regex pattern2(R"([+-]?([1-9][0-9]*)*e\^[1-9]+x)");
-    std::regex pattern3(R"([+-]?([1-9][0-9]*)*log\([1-9]+x\))");
-    std::regex pattern4(R"([+-]?([1-9][0-9]*)*sin\([1-9]+x\))");
-    std::regex pattern5(R"([+-]?([1-9][0-9]*)*cos\([1-9]+x\))");
-    std::regex pattern6(R"([2-9]\^x)");
+    std::regex pattern1(R"([+-]?([1-9][0-9]*)*x\^[1-9][0-9]*)");
+    std::regex pattern2(R"([+-]?([1-9][0-9]*)*e\^[1-9][0-9]*x)");
+    std::regex pattern3(R"([+-]?([1-9][0-9]*)*log\([1-9][0-9]*x\))");
+    std::regex pattern4(R"([+-]?([1-9][0-9]*)*sin\([1-9][0-9]*x\))");
+    std::regex pattern5(R"([+-]?([1-9][0-9]*)*cos\([1-9][0-9]*x\))");
+    std::regex pattern6(R"([1-9][0-9]*\^x)");
 
    
    
@@ -202,7 +211,7 @@ inline void  parse_graph(const std::string& input) {
         }
         catch (...) {
            
-            throw _INVALID_INPUT{ "Invalid input" };
+            throw _INVALID_INPUT{ "Invalid Input" };
         }
         
        
@@ -234,7 +243,7 @@ inline void  parse_graph(const std::string& input) {
                 a.a = stof(kati);
             }
             catch (...) {
-                throw _INVALID_INPUT{ "Invalid input" };
+                throw _INVALID_INPUT{ "Invalid Input" };
             }
         }
         else {
@@ -257,6 +266,7 @@ inline void  parse_graph(const std::string& input) {
     for (std::sregex_iterator it = begin3; it != end; ++it) {
         
         std::smatch match = *it;
+       
         std::string kati{ match.str() };//nlog(ax)
         Term3 a;
         if (kati[0] != 'l') {
@@ -264,7 +274,7 @@ inline void  parse_graph(const std::string& input) {
                 a.a = stof(kati);
             }
             catch (...) {
-                throw _INVALID_INPUT{ "Invalid input" };
+                throw _INVALID_INPUT{ "Invalid Input" };
             }
         }
         else {
@@ -291,7 +301,7 @@ inline void  parse_graph(const std::string& input) {
             }
             catch (...) {
               
-                throw _INVALID_INPUT{ "Invalid input" };
+                throw _INVALID_INPUT{ "Invalid Input" };
             }
         }
         else {
@@ -315,7 +325,7 @@ inline void  parse_graph(const std::string& input) {
                 a.a = stof(kati);
             }
             catch (...) {
-                throw _INVALID_INPUT{ "Invalid input" };
+                throw _INVALID_INPUT{ "Invalid Input" };
                
             }
         }
@@ -349,7 +359,7 @@ inline void  parse_graph(const std::string& input) {
     
    
     if (term.size() == 0) {
-        throw _INVALID_INPUT{ "Invalid input" };
+        throw _INVALID_INPUT{ "Invalid Input" };
     }
    draw_the_graph(term);
    return;
@@ -357,6 +367,4 @@ inline void  parse_graph(const std::string& input) {
 }
 
 _P_S_END
-
-
 
