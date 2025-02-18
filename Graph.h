@@ -260,7 +260,7 @@ inline void  parse_graph(const std::string& input) {
          std::string kati2{ it2 + 1,kati.end() };
 
        
-       try {
+      
            if (kati[0] != 'x') {
                try {
                    term.emplace_back<Term>({ std::stof(kati),std::stof(kati2) });
@@ -274,11 +274,8 @@ inline void  parse_graph(const std::string& input) {
            else {
                term.emplace_back<Term>({1,std::stof(kati2)});
            }
-       }
-       catch (...) {
-
-           throw _INVALID_INPUT{ "Invalid Input" };
-       }
+       
+       
 
        
 
@@ -415,7 +412,6 @@ inline void  parse_graph(const std::string& input) {
 }
 
 _P_S_END
-
 
 
 
