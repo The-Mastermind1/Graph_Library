@@ -249,9 +249,11 @@ inline void  parse_graph(const std::string& input) {
 
 
     for (std::sregex_iterator it = begin1; it != end; ++it) {
-       
+        
        
          match = *it;
+
+         
          kati= match.str() ;//ax^n
 
          it2 = std::find(kati.begin(), kati.end(),'^');
@@ -259,7 +261,19 @@ inline void  parse_graph(const std::string& input) {
 
        
        try {
-           term.emplace_back<Term>({ std::stof(kati), std::stof(kati2) });
+           if (kati[0] != 'x') {
+               try {
+                   term.emplace_back<Term>({ std::stof(kati),std::stof(kati2) });
+               }
+               catch (...) {
+
+                   throw _INVALID_INPUT{ "Invalid Input" };
+               }
+               
+           }
+           else {
+               term.emplace_back<Term>({1,std::stof(kati2)});
+           }
        }
        catch (...) {
 
@@ -401,6 +415,8 @@ inline void  parse_graph(const std::string& input) {
 }
 
 _P_S_END
+
+
 
 
 
