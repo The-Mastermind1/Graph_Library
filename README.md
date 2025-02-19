@@ -11,6 +11,6 @@ Graph:
 ![Icon Alt Text](C:\Users\user\source\repos\Project_kati)
 
 
-FOor e^5x+5log(5x)-2x^2:
+For e^5x+5log(5x)-2x^2:
 
-![Icon Alt Text](output.mbp)
+![Icon Alt Text](output.bmp)
