@@ -8,7 +8,7 @@ For -15x^3:
 
 Graph:
 
-![Something_Went_Wrong](output.bmp)
+![Something_Went_Wrong](Examples/output.bmp.url)
 
 
 For e^5x+5log(5x)-2x^2:
