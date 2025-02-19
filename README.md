@@ -8,6 +8,7 @@ For -15x^3:
 
 Graph:
 
+![Icon Alt Text](C:\Users\user\source\repos\Project_kati)
 
 
 
