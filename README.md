@@ -14,3 +14,8 @@ Graph:
 For e^5x+5log(5x)-2x^2:
 
 ![Something_Went_Wrong](output.bmp)
+
+For 5^x+2log(5x):
+
+
+![Something_Went_Wrong](output.bmp)
