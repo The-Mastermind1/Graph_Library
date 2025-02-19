@@ -9,10 +9,10 @@
 #include<utility>
 #include<iterator>
 
+
+
+
 _P_S_BEGIN
-
-
-
 
 _NODISCARD inline  float evaluate_polyonomial(float cofficient, float  expotent, float x)noexcept {
     std::cout << cofficient << " " << expotent << '\n';
@@ -183,7 +183,7 @@ inline void draw_the_graph(std::vector<Terms>& terms) {
 
 
                 sf::Image screenshot = texture.copyToImage();
-                if (!screenshot.saveToFile("output.bmp")) {
+                if (!screenshot.saveToFile("output3.png")) {
                     throw _FAILED_LOADED_IMAGE{ "Failed to load the image\n" };
                 }
                 screenshot.~Image();
@@ -412,6 +412,8 @@ inline void  parse_graph(const std::string& input) {
 }
 
 _P_S_END
+
+
 
 
 
