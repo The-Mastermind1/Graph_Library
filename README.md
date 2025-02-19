@@ -8,7 +8,7 @@ For -15x^3:
 
 Graph:
 
-![Icon Alt Text](C:\Users\user\source\repos\Project_kati)
+![Something_Went_Wrong](output.bmp)
 
 
 For e^5x+5log(5x)-2x^2:
