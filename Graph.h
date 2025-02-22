@@ -220,7 +220,7 @@ inline void  parse_graph(const std::string& input) {
     std::regex pattern3(R"([+-]?([1-9][0-9]*)*log\([1-9][0-9]*x\))");
     std::regex pattern4(R"([+-]?([1-9][0-9]*)*sin\([1-9][0-9]*x\))");
     std::regex pattern5(R"([+-]?([1-9][0-9]*)*cos\([1-9][0-9]*x\))");
-    std::regex pattern6(R"([1-9][0-9]*\^x)");
+    std::regex pattern6(R"([+-]?[1-9][0-9]*\^x)");
 
    
    
