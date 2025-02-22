@@ -34,3 +34,21 @@ For 5^x+2log(5x):
 
 
 ![Something_Went_Wrong](Examples/output3.png)
+
+
+
+# 📦 Dependencies:
+
+SFML 🖊<br>
+Used for graph visualization.<br>
+🔗 SFML License: https://www.sfml-dev.org/license.php
+
+cpp-httplib 🌐<br>
+Used to create and maintain the local server.<br>
+🔗 cpp-httplib MIT License: https://github.com/yhirose/cpp-httplib/blob/master/LICENSE
+
+
+
+# 👥CONTRIBUTORS:
+
+~The-Mastermind1<br>
