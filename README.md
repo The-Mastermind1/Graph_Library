@@ -1,9 +1,24 @@
-~This is a project designed to display simple 2d mathematic graphs in  a 800x600 pixes window  using sfml 
+This program creates a website in a local server and takes an input function following these rules:<br>
+~ +-ax^n (when the +,-,a is not necessary a!=0 and a belongs to Z AND Z!=0 ,n>0 and n belongs to Z)
+<br>
+~ +-ae^nx (when the +,-,a is not necessary n>0 and a belongs to Z AND Z!=0 n>0 and n belongs to Z)
+<br>
+~ +-alog(n*x) (when the +,-,a is not necessary and α belongs to Z AND Z!=0 n>0 and n belongs to Z)
+<br>
+~ +-asin(n*x) (when the +,-,a is not necessary and a belongs to Z AND Z!=0 n>0 and n belongs to Z) 
+<br>
+~ +-acos(n*x) (when the +,-,a is not necessary and a belongs to Z AND Z!=0 n>0 and n belongs to Z)
+<br>
+~ -+a^x (when the +,-,a is not necessary a>0 and a belongs to N AND N!=0)
+<br>
 
-~This library is also using regex in order to recognize patterns 
+~(Z is for integers)
 
-~Here are some examples of this:
+# 🆘Use the + or - a or none of them🆘
+<br>
 
+
+and gives to the user a 2D graph that represents the function he gave. 
 For -15x^3: 
 
 Graph:
